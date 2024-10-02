@@ -6,8 +6,7 @@ package ad.cdm.persistencia;
 
 import ad.cdm.model.Persona;
 import ad.cdm.model.exceptions.NotFoundPersonaException;
-import ad.cdm.tarea.Tarea11Sol;
-import java.io.FileNotFoundException;
+import ad.cdm.util.LogUtil;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -21,12 +20,12 @@ import java.util.logging.Logger;
 public class RandomAccessPersistencia implements IPersistencia {
 
     private static final int LONG_BYTES_PERSONA = 35 + Persona.MAX_LENGTH_NOMBRE * 2;
- 
-  
 
- 
+    static final Logger logger = Logger.getLogger(RandomAccessPersistencia.class.getName());
 
-
+    public RandomAccessPersistencia() {
+        LogUtil.setLogger();
+    }
 
     @Override
     public void escribirPersonas(ArrayList<Persona> personas, String ruta) {
@@ -34,7 +33,7 @@ public class RandomAccessPersistencia implements IPersistencia {
 
         if (personas != null) {
             try (
-                     RandomAccessFile raf = new RandomAccessFile(ruta, "rw");) {
+                    RandomAccessFile raf = new RandomAccessFile(ruta, "rw");) {
 
                 longitudBytes = raf.length();
                 raf.seek(longitudBytes);
@@ -56,33 +55,30 @@ public class RandomAccessPersistencia implements IPersistencia {
 
                 }
 
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-                System.out.println("Se ha producido una excepción: " + ex.getMessage());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                System.out.println("Se ha producido una excepción: " + ex.getMessage());
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Se ha producido una excepción: ", ex);
             }
         }
 
     }
-@Override
+
+    @Override
     public ArrayList<Persona> leerTodo(String ruta) {
         long id;
         String dni = "", nombre = "";
         int edad;
         float salario;
-        StringBuilder sb =null;
+        StringBuilder sb = null;
         Persona persona = null;
         boolean borrado = false;
         ArrayList<Persona> personas = new ArrayList<>();
         try (
-                 RandomAccessFile raf = new RandomAccessFile(ruta, "r");) {
+                RandomAccessFile raf = new RandomAccessFile(ruta, "r");) {
 
             do {
                 id = raf.readLong();
                 sb = new StringBuilder();
-                for (int i = 0; i <= (Persona.MAX_LENGTH_DNI -1); i++) {
+                for (int i = 0; i <= (Persona.MAX_LENGTH_DNI - 1); i++) {
                     sb.append(raf.readChar());
                 }
 
@@ -108,8 +104,7 @@ public class RandomAccessPersistencia implements IPersistencia {
             } while (raf.getFilePointer() < raf.length());
 
         } catch (IOException ex) {
-            ex.printStackTrace();
-            System.out.println("Se ha producido una excepción: " + ex.getMessage());
+            logger.log(Level.SEVERE, "Se ha producido una excepción: ", ex);
         }
         return personas;
 
@@ -117,12 +112,14 @@ public class RandomAccessPersistencia implements IPersistencia {
 
     /**
      * Obtén un obxecto Persona do arquivo sinalado en ruta
-     * @param posicion indica a posición que ocupa cada persoa comezando no 0: o cero devolverá a primera persoa, o 1 a segunda persoa, etc.
+     *
+     * @param posicion indica a posición que ocupa cada persoa comezando no 0: o
+     * cero devolverá a primera persoa, o 1 a segunda persoa, etc.
      * @param ruta a ruta ao arquivo
-     * @return o obxecto Persoa atopado nesa posición 
+     * @return o obxecto Persoa atopado nesa posición
      * @throws NotFoundPersonaException en caso de error
      */
-    public Persona leerPersona(int posicion, String ruta) throws NotFoundPersonaException{
+    public Persona leerPersona(int posicion, String ruta) throws NotFoundPersonaException {
         long id = 0;
         String dni = "", nombre = "";
         int edad = 0;
@@ -132,11 +129,11 @@ public class RandomAccessPersistencia implements IPersistencia {
         boolean borrado = false;
 
         try (
-                 RandomAccessFile raf = new RandomAccessFile(ruta, "r");) {
+                RandomAccessFile raf = new RandomAccessFile(ruta, "r");) {
 
             raf.seek(converToBytePosition(posicion));
             id = raf.readLong();
-            for (int i = 0; i <= (Persona.MAX_LENGTH_DNI -1); i++) {
+            for (int i = 0; i <= (Persona.MAX_LENGTH_DNI - 1); i++) {
                 sb.append(raf.readChar());
             }
 
@@ -156,12 +153,8 @@ public class RandomAccessPersistencia implements IPersistencia {
             persona = new Persona(id, dni, edad, salario, nombre);
             persona.setBorrado(borrado);
 
-        
-        } catch (IOException ex) {
-             Logger.getLogger(Tarea11Sol.class.getName()).log(Level.SEVERE, "Se ha producido una excepción leyendo la ruta "+ ruta + " posicion: "+ posicion, ex);
-            throw new NotFoundPersonaException(posicion, "Se ha producido una excepción", ex);
-        }  catch (Exception ex) {
-            
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Se ha producido una excepción: ", ex);
             throw new NotFoundPersonaException(posicion, "Se ha producido una excepción", ex);
         }
 
@@ -176,5 +169,4 @@ public class RandomAccessPersistencia implements IPersistencia {
         }
     }
 
-  
 }

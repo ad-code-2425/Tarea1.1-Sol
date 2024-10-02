@@ -7,6 +7,7 @@ package ad.cdm.tarea;
 import ad.cdm.model.Persona;
 import ad.cdm.model.exceptions.NotFoundPersonaException;
 import ad.cdm.persistencia.RandomAccessPersistencia;
+import ad.cdm.util.LogUtil;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class Tarea11Sol {
     public static void main(String[] args) {
 
         try {
-            setLogger();
+            LogUtil.setLogger();
             
             int posicion = leerPosicion();
 
@@ -84,12 +85,5 @@ public class Tarea11Sol {
         return posicion;
     }
 
-    private static void setLogger() {
-        try {
-            LogManager.getLogManager().readConfiguration(new FileInputStream(Paths.get("src", "mylogging.properties").toString()));
-        } catch (SecurityException | IOException e1) {
-            e1.printStackTrace();
-        }
-
-    }
+   
 }
