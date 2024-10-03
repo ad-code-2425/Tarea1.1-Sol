@@ -63,7 +63,7 @@ public class RandomAccessPersistencia implements IPersistencia {
     }
 
     @Override
-    public ArrayList<Persona> leerTodo(String ruta) {
+    public ArrayList<Persona> leerTodo(String ruta) throws IOException {
         long id;
         String dni = "", nombre = "";
         int edad;
@@ -105,6 +105,7 @@ public class RandomAccessPersistencia implements IPersistencia {
 
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Se ha producido una excepción: ", ex);
+            throw ex;
         }
         return personas;
 
@@ -165,7 +166,7 @@ public class RandomAccessPersistencia implements IPersistencia {
         if (posicion == 0) {
             return posicion;
         } else {
-            return LONG_BYTES_PERSONA * (posicion - 1);
+            return LONG_BYTES_PERSONA * (posicion);
         }
     }
 

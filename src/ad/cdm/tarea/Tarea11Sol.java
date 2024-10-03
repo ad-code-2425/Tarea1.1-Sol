@@ -41,10 +41,11 @@ public class Tarea11Sol {
             RandomAccessPersistencia rap = new RandomAccessPersistencia();
             Persona found = rap.leerPersona(posicion, PERSONAS_ORIGEN_PATH_RAN.toString());
             if (found != null) {
-                System.out.println("Se ha encontrado en la posición " + posicion + found);
+                System.out.println("Atopouse a persoa da posición " + posicion+ " cos seguintes datos: " + found);
             }
 
         } catch (NotFoundPersonaException | IOException ex) {
+            System.err.println("Ocorreu un erro e non se puido executar correctamente o programa. Revise o arquivo de log");
            logger.log(Level.SEVERE, "Ocorreu unha excepción", ex);
         }
 
@@ -55,7 +56,7 @@ public class Tarea11Sol {
         boolean valida = false;
         int posicion = -1;
         do {
-            System.out.println("Introduzca la posición de la persona que quiere leer (del 0 al 5)");
+            System.out.println("Introduza a posición da persoa que desexe ler (un enterio do 0 ao 5)");
 
             try {
                 // Enter data using BufferReader

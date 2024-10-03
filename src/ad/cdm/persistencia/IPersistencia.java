@@ -6,6 +6,7 @@ package ad.cdm.persistencia;
 
 import ad.cdm.model.Persona;
 import ad.cdm.model.exceptions.NotFoundPersonaException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,7 @@ public interface IPersistencia {
 
     void escribirPersonas(ArrayList<Persona> personas, String ruta);
 
-    ArrayList<Persona> leerTodo(String ruta);
+    ArrayList<Persona> leerTodo(String ruta)throws IOException;
 
     public Persona leerPersona(int posicion, String ruta) throws NotFoundPersonaException;
 
