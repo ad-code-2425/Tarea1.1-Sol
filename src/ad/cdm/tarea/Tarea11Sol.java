@@ -9,14 +9,12 @@ import ad.cdm.model.exceptions.NotFoundPersonaException;
 import ad.cdm.persistencia.RandomAccessPersistencia;
 import ad.cdm.util.LogUtil;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.LogManager;
 
 /**
  *
@@ -58,10 +56,10 @@ public class Tarea11Sol {
         do {
             System.out.println("Introduza a posición da persoa que desexe ler (un enterio do 0 ao 5)");
 
-            try {
+            try (
                 // Enter data using BufferReader
                 BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(System.in));
+                        new InputStreamReader(System.in));){
 
                 // Reading data using readLine
                 numeroString = reader.readLine();
